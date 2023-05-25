@@ -141,7 +141,7 @@ class Main(object):
         col = Gtk.TreeViewColumn("Input Device")
         widget.append_column(col)
         celltext = Gtk.CellRendererText()
-        col.pack_start(celltext, True, True, 0)
+        col.pack_start(celltext, 0)
         col.add_attribute(celltext,'text',0)
         widget.set_model(list)
         for device in devices:
@@ -156,7 +156,7 @@ class Main(object):
         for item in data:
             list.append(item)
         celltext = Gtk.CellRendererText()
-        widget.pack_start(celltext, True, True, 0)
+        widget.pack_start(celltext, 0)
         widget.add_attribute(celltext,'text',1)
         widget.set_active(0)
         # Set up modify action window
