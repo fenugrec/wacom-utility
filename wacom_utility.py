@@ -1,7 +1,9 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 # Import global modules
 # Dep: pygtk python-xml.dom.minidom wacom-tools
 
+from builtins import str
+from builtins import object
 import sys
 import gtk
 import gtk.glade
@@ -19,7 +21,7 @@ from cairo_framework import Pad
 from tablet_capplet import GraphicsTabletApplet
 
 
-class Main:
+class Main(object):
     def __init__(self):
         # Set working directory
         os.chdir(os.path.dirname(os.path.abspath(sys.argv[0])))
@@ -333,7 +335,7 @@ class Main:
         gc.collect()
 
 
-class ModifyAction:
+class ModifyAction(object):
     def __init__(self, Tablet, wTree, Device, Button, xSetWacomObject):
         self.Tablet = Tablet
         self.SelectedItem = Device

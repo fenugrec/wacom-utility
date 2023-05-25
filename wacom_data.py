@@ -1,8 +1,10 @@
+from __future__ import print_function
 # Loads settings on various models of tablets
+from builtins import object
 import xml.dom.minidom
 
 
-class TabletIdentities:
+class TabletIdentities(object):
     def __init__(self):
         self.Tablets = []
         self.Tablets.append(Tablet("MODEL_PP_0405", "Wacom PenPartner", 0x00))
@@ -77,7 +79,7 @@ class TabletIdentities:
     # tablet("PTK-540WL", "Wacom Intuos4 Wireless Bluetooth", 0x00)) # Stub, this needs special support
 
 
-class Tablet:
+class Tablet(object):
     def __init__(self, Model, Name, ProductId):
         self.Name = Name
         self.Model = Model
@@ -109,7 +111,7 @@ class Tablet:
             print("Error loading " + "images/pad/" + self.Model + ".xml")
 
 
-class Button:
+class Button(object):
     def __init__(self, Name, Number, Callsign, X1, Y1, X2, Y2):
         self.Name = Name
         self.Number = Number

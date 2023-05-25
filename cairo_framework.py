@@ -1,5 +1,9 @@
+from __future__ import division
+from __future__ import print_function
 # Some cairo magic, thanks goes to Michael Urman for tutorials
 
+from builtins import str
+from past.utils import old_div
 import gtk
 import cairo
 import os
@@ -50,7 +54,7 @@ class Pad(DrawingArea):
             for button in self.button_map:
                 cr.set_source_rgba(1,1,1,1)
                 choffset = len(str(button.Number)) * 6
-                cr.move_to(int((button.X1+button.X2)/2)-choffset,int((button.Y1+button.Y2)/2)+6)
+                cr.move_to(int(old_div((button.X1+button.X2),2))-choffset,int(old_div((button.Y1+button.Y2),2))+6)
                 cr.show_text (str(button.Number))
                 cr.set_source_rgba(1.0, 1.0, 1.0,0.4)
                 cr.rectangle(button.X1, button.Y1, button.X2-button.X1, button.Y2-button.Y1)

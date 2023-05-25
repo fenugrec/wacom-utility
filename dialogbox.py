@@ -1,10 +1,11 @@
 # Dialog Box Class
 
 # Dialog Box
+from builtins import object
 import gtk
 import gtk.glade
 
-class DialogBox:
+class DialogBox(object):
     def __init__(self,parent,wTree):
         # Set the Glade file
         self.wTree = wTree

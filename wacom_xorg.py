@@ -1,6 +1,7 @@
 # Xorg Modification utility
 # Tested on Ubuntu Jaunty x86_64
 
+from builtins import range
 from copy import copy
 import os
 

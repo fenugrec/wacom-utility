@@ -1,9 +1,10 @@
 # Identifies wacom tablet model
+from builtins import object
 from wacom_data import TabletIdentities
 import os
 
 
-class TabletIdClass:
+class TabletIdClass(object):
     def __init__(self, cloak=""):
         self.TabletIds = TabletIdentities()
         self.tablets = []

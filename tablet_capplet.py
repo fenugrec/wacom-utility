@@ -1,3 +1,5 @@
+from __future__ import division
+from __future__ import print_function
 ############################################################################
 ##
 ## Copyright (C) 2007 Alexander Macdonald. All rights reserved.
@@ -11,6 +13,10 @@
 ##
 ############################################################################
 
+from builtins import str
+from builtins import range
+from builtins import object
+from past.utils import old_div
 import pygtk
 pygtk.require('2.0')
 import gtk
@@ -117,7 +123,7 @@ class PressureCurveWidget(gtk.DrawingArea):
 
     def MotionEvent(self, widget, event):
         pos = event.get_coords()
-        pos = (pos[0] / self.Scale[0], pos[1] / self.Scale[1])
+        pos = (old_div(pos[0], self.Scale[0]), old_div(pos[1], self.Scale[1]))
 
         if not self.Points:
             return
@@ -131,7 +137,7 @@ class PressureCurveWidget(gtk.DrawingArea):
             self.Points[3] = self.ClampValue(pos[1])
 
         elif self.DraggingCF:
-            self.ClickForce = int(self.ClampValue(pos[0]) / (100.0 / 19)) * (100.0 / 19)
+            self.ClickForce = int(old_div(self.ClampValue(pos[0]), (100.0 / 19))) * (100.0 / 19)
 
     def ButtonPress(self, widget, event):
         if not self.Points:
@@ -141,7 +147,7 @@ class PressureCurveWidget(gtk.DrawingArea):
             self.DragFinished()
         else:
             pos = event.get_coords()
-            pos = (pos[0] / self.Scale[0], pos[1] / self.Scale[1])
+            pos = (old_div(pos[0], self.Scale[0]), old_div(pos[1], self.Scale[1]))
 
             if (self.Points[0] - self.ControlPointDiameter) < pos[0] < (self.Points[0] + self.ControlPointDiameter):
                 if (self.Points[1] - self.ControlPointDiameter) < pos[1] < (self.Points[1] + self.ControlPointDiameter):
@@ -168,11 +174,11 @@ class PressureCurveWidget(gtk.DrawingArea):
             elif self.DraggingCP2:
                 self.Points[0] = self.Points[3]
                 self.Points[1] = self.Points[2]
-            print (int(self.Points[0]), int(100.5 - self.Points[1]), int(self.Points[2]), int(100.5 - self.Points[3]))
+            print((int(self.Points[0]), int(100.5 - self.Points[1]), int(self.Points[2]), int(100.5 - self.Points[3])))
 
             SetPressCurve(self.DeviceName, [int(self.Points[0]+.5), int(100.5 - self.Points[1]), int(self.Points[2]+.5), int(100.5 - self.Points[3])])
         if self.ClickForce:
-            SetClickForce(self.DeviceName, int(self.ClickForce / (100.0 / 19.0)) + 1)
+            SetClickForce(self.DeviceName, int(old_div(self.ClickForce, (100.0 / 19.0))) + 1)
         self.DraggingCP1 = self.DraggingCP2 = self.DraggingCF = False
 
     def ExposeEvent(self, widget, event):
@@ -346,7 +352,7 @@ class DrawingTestWidget(gtk.DrawingArea):
         cr.stroke()
 
 
-class GraphicsTabletApplet:
+class GraphicsTabletApplet(object):
     def __init__(self, window, wTree, Device):
         self.Active = 0  # Control
         self.InLoop = 0  # Flag

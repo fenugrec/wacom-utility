@@ -1,10 +1,15 @@
+from __future__ import print_function
 # xsetwacom interface
+from future import standard_library
+standard_library.install_aliases()
+from builtins import str
+from builtins import object
 import os
 from copy import copy
 from tablet_capplet import GetPressCurve, GetClickForce
 
 
-class XSetWacom:
+class XSetWacom(object):
     def listInterfaces(self):
         # List all input devices
         devlist = os.popen("xsetwacom --list devices").readlines()
