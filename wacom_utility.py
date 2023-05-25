@@ -5,6 +5,8 @@
 from builtins import str
 from builtins import object
 import sys
+import gi
+gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
 import os
 import gc
