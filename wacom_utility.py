@@ -197,8 +197,9 @@ class Main(object):
 
     def Create_Window(self):
         # Create widgets
-        self.wTree = Gtk.Builder.add_from_file("wacom_utility.glade")
-        self.window = self.wTree.get_widget("window1")
+        self.wTree = Gtk.Builder()
+        self.wTree.add_from_file("wacom_utility.ui")
+        self.window = self.wTree.get_object("window1")
         self.window.set_title("Wacom Tablet Configuration")
         self.window.connect("destroy",self.Close)
         # Set default button actions
