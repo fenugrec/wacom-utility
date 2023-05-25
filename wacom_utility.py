@@ -178,7 +178,7 @@ class Main(object):
         for item in data:
             list.append(item)
         celltext = Gtk.CellRendererText()
-        widget.pack_start(celltext, True, True, 0)
+        widget.pack_start(celltext, 0)
         widget.add_attribute(celltext,'text',1)
         widget.set_active(0)
         widget = self.wTree.get_object("modhelp")
