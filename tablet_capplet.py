@@ -20,7 +20,6 @@ from past.utils import old_div
 import gi
 gi.require_version('Gtk', '3.0')
 from gi.repository import Gtk
-import Gtk.glade
 from gi.repository import GObject
 import cairo
 import subprocess

@@ -3,7 +3,6 @@
 # Dialog Box
 from builtins import object
 from gi.repository import Gtk
-import Gtk.glade
 
 class DialogBox(object):
     def __init__(self,parent,wTree):

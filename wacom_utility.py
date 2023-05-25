@@ -6,7 +6,6 @@ from builtins import str
 from builtins import object
 import sys
 from gi.repository import Gtk
-import Gtk.glade
 import os
 import gc
 from copy import copy
@@ -196,7 +195,7 @@ class Main(object):
 
     def Create_Window(self):
         # Create widgets
-        self.wTree = Gtk.glade.XML("wacom_utility.glade")
+        self.wTree = Gtk.Builder.add_from_file("wacom_utility.glade")
         self.window = self.wTree.get_widget("window1")
         self.window.set_title("Wacom Tablet Configuration")
         self.window.connect("destroy",self.Close)
