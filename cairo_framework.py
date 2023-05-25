@@ -10,9 +10,9 @@ import os
 
 
 class DrawingArea(Gtk.DrawingArea):
-    __gsignals__ = {"expose-event": "override"}
+    __gsignals__ = {"draw": "override"}
 
-    def do_expose_event(self, event):
+    def do_draw(self, event):
         cr = self.window.cairo_create()
         cr.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
         cr.clip()
