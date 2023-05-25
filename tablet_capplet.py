@@ -17,11 +17,11 @@ from builtins import str
 from builtins import range
 from builtins import object
 from past.utils import old_div
-import pygtk
-pygtk.require('2.0')
-import gtk
-import gtk.glade
-import gobject
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Gtk
+import Gtk.glade
+from gi.repository import GObject
 import cairo
 import subprocess
 import math
@@ -61,9 +61,9 @@ def SetMode(devicename, m):
     output = subprocess.Popen(command)
 
 
-class PressureCurveWidget(gtk.DrawingArea):
+class PressureCurveWidget(Gtk.DrawingArea):
     def __init__(self):
-        gtk.DrawingArea.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.Points = [0,100,100,0]
         self.Pressure = 0.0
@@ -82,7 +82,7 @@ class PressureCurveWidget(gtk.DrawingArea):
         self.DraggingCP2 = False
         self.DraggingCF = False
 
-        self.set_events(gtk.gdk.POINTER_MOTION_MASK  | gtk.gdk.BUTTON_MOTION_MASK | gtk.gdk.BUTTON1_MOTION_MASK | gtk.gdk.BUTTON2_MOTION_MASK | gtk.gdk.BUTTON3_MOTION_MASK | gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON_RELEASE_MASK)
+        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK  | Gdk.EventMask.BUTTON_MOTION_MASK | Gdk.EventMask.BUTTON1_MOTION_MASK | Gdk.EventMask.BUTTON2_MOTION_MASK | Gdk.EventMask.BUTTON3_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK)
 
         self.connect("configure-event", self.ConfigureEvent)
         self.connect("expose-event", self.ExposeEvent)
@@ -105,7 +105,7 @@ class PressureCurveWidget(gtk.DrawingArea):
             self.Points = [points[0], 100.0 - points[1], points[2], 100.0 - points[3]]
 
     def Update(self):
-        if not isinstance(self.window, gtk.gdk.Window):
+        if not isinstance(self.window, Gdk.Window):
             return
         self.window.invalidate_region(self.window.get_clip_region(), True)
 
@@ -286,9 +286,9 @@ class PressureCurveWidget(gtk.DrawingArea):
         cr.restore()
 
 
-class DrawingTestWidget(gtk.DrawingArea):
+class DrawingTestWidget(Gtk.DrawingArea):
     def __init__(self):
-        gtk.DrawingArea.__init__(self)
+        GObject.GObject.__init__(self)
 
         self.Device = 0
         self.Radius = 5.0
@@ -297,7 +297,7 @@ class DrawingTestWidget(gtk.DrawingArea):
         self.Raster = None
         self.RasterCr = None
 
-        self.set_events(gtk.gdk.POINTER_MOTION_MASK  | gtk.gdk.BUTTON_MOTION_MASK | gtk.gdk.BUTTON1_MOTION_MASK | gtk.gdk.BUTTON2_MOTION_MASK | gtk.gdk.BUTTON3_MOTION_MASK | gtk.gdk.BUTTON_PRESS_MASK | gtk.gdk.BUTTON_RELEASE_MASK)
+        self.set_events(Gdk.EventMask.POINTER_MOTION_MASK  | Gdk.EventMask.BUTTON_MOTION_MASK | Gdk.EventMask.BUTTON1_MOTION_MASK | Gdk.EventMask.BUTTON2_MOTION_MASK | Gdk.EventMask.BUTTON3_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK)
 
         self.connect("configure-event", self.ConfigureEvent)
         self.connect("expose-event", self.ExposeEvent)
@@ -315,9 +315,9 @@ class DrawingTestWidget(gtk.DrawingArea):
         self.RasterCr.fill()
 
     def GetPressure(self):
-        dev = gtk.gdk.devices_list()[self.Device]
+        dev = Gdk.devices_list()[self.Device]
         state = dev.get_state(self.window)
-        return dev.get_axis(state[0], gtk.gdk.AXIS_PRESSURE)
+        return dev.get_axis(state[0], Gdk.AXIS_PRESSURE)
 
     def MotionEvent(self, widget, event):
         if self.Drawing:
@@ -332,7 +332,7 @@ class DrawingTestWidget(gtk.DrawingArea):
             self.RasterCr.fill_preserve()
             self.RasterCr.set_source_rgba(0.5, 0.2, p, 0.5)
             self.RasterCr.stroke()
-            reg = gtk.gdk.Region()
+            reg = Gdk.Region()
             reg.union_with_rect((int(pos[0] - r - 2), int(pos[1] - r - 2), int(2 * (r + 2)), int(2 * (r + 2))))
             self.window.invalidate_region(reg, False)
 
@@ -372,7 +372,7 @@ class GraphicsTabletApplet(object):
         self.DrawingArea.show()
         self.DrawingTestFrame.add(self.DrawingArea)
 
-        devices = gtk.gdk.devices_list()
+        devices = Gdk.devices_list()
 
         for i in range(0,len(devices)):
             item = devices[i].name
@@ -382,37 +382,37 @@ class GraphicsTabletApplet(object):
         self.DeviceName = Device
 
         self.DrawingArea.Device = self.Device
-        self.DeviceName = gtk.gdk.devices_list()[self.Device].name
+        self.DeviceName = Gdk.devices_list()[self.Device].name
         self.Curve.SetDevice(self.DeviceName)
         self.UpdateDeviceMode()
 
         self.DeviceModeCombo.connect("changed", self.ModeChanged)
 
-        self.DrawingArea.set_extension_events(gtk.gdk.EXTENSION_EVENTS_ALL)
+        self.DrawingArea.set_extension_events(Gdk.EXTENSION_EVENTS_ALL)
 
     def Run(self):
         self.Active = 1
         self.InLoop = 1
-        self.DeviceName = gtk.gdk.devices_list()[self.Device].name
+        self.DeviceName = Gdk.devices_list()[self.Device].name
         self.UpdateDeviceMode()
-        gobject.timeout_add(20, self.Update)
+        GObject.timeout_add(20, self.Update)
 
     def Stop(self):
         self.Active = 0
 
     def GetPressure(self):
-        dev = gtk.gdk.devices_list()[self.Device]
-        if not isinstance(self.DrawingArea.window, gtk.gdk.Window):
+        dev = Gdk.devices_list()[self.Device]
+        if not isinstance(self.DrawingArea.window, Gdk.Window):
             return 0.0, 0.0
         state = dev.get_state(self.DrawingArea.window)
-        return dev.get_axis(state[0], gtk.gdk.AXIS_PRESSURE)
+        return dev.get_axis(state[0], Gdk.AXIS_PRESSURE)
 
     def GetTilt(self):
-        dev = gtk.gdk.devices_list()[self.Device]
+        dev = Gdk.devices_list()[self.Device]
         state = dev.get_state(self.MainWindow.window)
         try:
-            x = float(dev.get_axis(state[0], gtk.gdk.AXIS_XTILT))
-            y = float(dev.get_axis(state[0], gtk.gdk.AXIS_YTILT))
+            x = float(dev.get_axis(state[0], Gdk.AXIS_XTILT))
+            y = float(dev.get_axis(state[0], Gdk.AXIS_YTILT))
             return x, y
         except:
             return 0.0, 0.0
@@ -434,7 +434,7 @@ class GraphicsTabletApplet(object):
     def DeviceSelected(self, widget):
         self.Device = widget.get_active()
         self.DrawingArea.Device = self.Device
-        self.DeviceName = gtk.gdk.devices_list()[self.Device].name
+        self.DeviceName = Gdk.devices_list()[self.Device].name
         self.Curve.SetDevice(self.DeviceName)
         self.UpdateDeviceMode()
 
@@ -449,8 +449,8 @@ class GraphicsTabletApplet(object):
 
         t = self.GetTilt()
 
-        self.XTilt.set_adjustment(gtk.Adjustment(t[0], -1.0, 1.0))
-        self.YTilt.set_adjustment(gtk.Adjustment(t[1], -1.0, 1.0))
+        self.XTilt.set_adjustment(Gtk.Adjustment(t[0], -1.0, 1.0))
+        self.YTilt.set_adjustment(Gtk.Adjustment(t[1], -1.0, 1.0))
         if self.Active:
             return True
         else:

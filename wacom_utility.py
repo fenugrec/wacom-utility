@@ -5,8 +5,8 @@
 from builtins import str
 from builtins import object
 import sys
-import gtk
-import gtk.glade
+from gi.repository import Gtk
+import Gtk.glade
 import os
 import gc
 from copy import copy
@@ -79,7 +79,7 @@ class Main(object):
             # Set tablet name
             widget = self.wTree.get_widget("tablet-label")
             widget.set_label("No graphics tablets detected")
-            gtk.main()
+            Gtk.main()
             return
         # Check for autostart desktop file, if not present, generate it
         try:
@@ -136,11 +136,11 @@ class Main(object):
         devices = self.xSetWacomObject.listInterfaces()
         widget = self.wTree.get_widget("input-list")
         widget.connect("cursor-changed",self.SelectDevice)
-        list = gtk.ListStore(str)
-        col = gtk.TreeViewColumn("Input Device")
+        list = Gtk.ListStore(str)
+        col = Gtk.TreeViewColumn("Input Device")
         widget.append_column(col)
-        celltext = gtk.CellRendererText()
-        col.pack_start(celltext)
+        celltext = Gtk.CellRendererText()
+        col.pack_start(celltext, True, True, 0)
         col.add_attribute(celltext,'text',0)
         widget.set_model(list)
         for device in devices:
@@ -149,13 +149,13 @@ class Main(object):
 
         # Set up selection of modifiers
         widget = self.wTree.get_widget("availkeys")
-        list = gtk.ListStore(str, str)
+        list = Gtk.ListStore(str, str)
         widget.set_model(list)
         data = self.xSetWacomObject.listModifiers()
         for item in data:
             list.append(item)
-        celltext = gtk.CellRendererText()
-        widget.pack_start(celltext)
+        celltext = Gtk.CellRendererText()
+        widget.pack_start(celltext, True, True, 0)
         widget.add_attribute(celltext,'text',1)
         widget.set_active(0)
         # Set up modify action window
@@ -171,13 +171,13 @@ class Main(object):
 
         # Set up selection of mouse actions
         widget = self.wTree.get_widget("MouseConfig")
-        list = gtk.ListStore(str, str)
+        list = Gtk.ListStore(str, str)
         widget.set_model(list)
         data = self.xSetWacomObject.listMouseActions()
         for item in data:
             list.append(item)
-        celltext = gtk.CellRendererText()
-        widget.pack_start(celltext)
+        celltext = Gtk.CellRendererText()
+        widget.pack_start(celltext, True, True, 0)
         widget.add_attribute(celltext,'text',1)
         widget.set_active(0)
         widget = self.wTree.get_widget("modhelp")
@@ -192,11 +192,11 @@ class Main(object):
             sys.exit()
         # Gtk main loop
 
-        gtk.main()
+        Gtk.main()
 
     def Create_Window(self):
         # Create widgets
-        self.wTree = gtk.glade.XML("wacom_utility.glade")
+        self.wTree = Gtk.glade.XML("wacom_utility.glade")
         self.window = self.wTree.get_widget("window1")
         self.window.set_title("Wacom Tablet Configuration")
         self.window.connect("destroy",self.Close)
@@ -222,7 +222,7 @@ class Main(object):
                 self.xSetWacomObject.saveToXSession(self.Tablet)
         else:
             self.xSetWacomObject.purgeXSession()
-        gtk.main_quit()
+        Gtk.main_quit()
 
     def CheckBoxClick(self, widget,setting):
         value = int(widget.get_active())
@@ -271,10 +271,10 @@ class Main(object):
             del self.PressureMachine
             gc.collect()
             self.PressureMachine=None
-            # Removing its gdk.window reference
+            # Removing its Gdk.window reference
 
         # Get a second copy of the tree structure
-        wTree = gtk.glade.XML("wacom_utility.glade")
+        wTree = Gtk.glade.XML("wacom_utility.glade")
         if self.SelectedItem == "Welcome Screen":
             # Place container for this screen
             widget = wTree.get_widget("WelcomeScreen")
@@ -290,20 +290,20 @@ class Main(object):
             widget.set_parameters(self.Tablet)
             widget.set_size_request(self.Tablet.GraphicWidth,-1)
             container = wTree.get_widget("padbox")
-            container.pack_start(widget)
+            container.pack_start(widget, True, True, 0)
             widget.show()
 
             # Configures button maps
             container = wTree.get_widget("padbuttonlist")
             for item in self.Tablet.Buttons:
-                placeholder = gtk.HBox()
-                widget1 = gtk.Label()
+                placeholder = Gtk.HBox()
+                widget1 = Gtk.Label()
                 widget1.set_use_markup(True)
                 widget1.set_markup("<span foreground='#000000' font_desc='sans 18' stretch='normal' weight='normal'>"+str(item.Number)+"</span>")
 
-                widget2 = gtk.Label(item.Name)
-                widget3 = gtk.Label(self.xSetWacomObject.getTypeAndName(self.SelectedItem, item.Callsign)[1])
-                widget4 = gtk.Button(stock="gtk-edit")
+                widget2 = Gtk.Label(label=item.Name)
+                widget3 = Gtk.Label(self.xSetWacomObject.getTypeAndName(self.SelectedItem, item.Callsign)[1])
+                widget4 = Gtk.Button(stock="gtk-edit")
                 widget4.connect("button-press-event",self.ShowModWindow, item)
                 placeholder.pack_start(widget1,0,0,4)
                 placeholder.pack_start(widget2,0,0,4)
@@ -390,7 +390,7 @@ class ModifyAction(object):
 
         # Show Window
         self.window.show_all()
-        gtk.main()
+        Gtk.main()
 
     def ChangeState(self, widget):
         if widget == self.wTree.get_widget("rb1"):
@@ -465,7 +465,7 @@ class ModifyAction(object):
         # code
         for event in self.Events:
             event[0].disconnect(event[1])
-        gtk.main_quit()
+        Gtk.main_quit()
         self.window.hide()
 
 

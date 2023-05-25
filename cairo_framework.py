@@ -4,12 +4,12 @@ from __future__ import print_function
 
 from builtins import str
 from past.utils import old_div
-import gtk
+from gi.repository import Gtk
 import cairo
 import os
 
 
-class DrawingArea(gtk.DrawingArea):
+class DrawingArea(Gtk.DrawingArea):
     __gsignals__ = {"expose-event": "override"}
 
     def do_expose_event(self, event):

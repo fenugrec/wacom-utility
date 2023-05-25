@@ -2,8 +2,8 @@
 
 # Dialog Box
 from builtins import object
-import gtk
-import gtk.glade
+from gi.repository import Gtk
+import Gtk.glade
 
 class DialogBox(object):
     def __init__(self,parent,wTree):
@@ -12,11 +12,11 @@ class DialogBox(object):
         # Load pointer for dialog box
         self.window = self.wTree.get_widget("dialogbox")
         self.window.set_title("Wacom Control Panel")
-        self.window.set_transient_for(parent)
+        self.set_transient_for(parent)
         self.window.set_destroy_with_parent(True)
 
 
-        self.window.set_skip_taskbar_hint(1)
+        self.set_skip_taskbar_hint(1)
         self.window.set_skip_pager_hint(1)
 
         #self.window.present()
@@ -26,12 +26,12 @@ class DialogBox(object):
         self.window.connect("key-press-event", self.keydown)
         self.button2 = self.wTree.get_widget("dialogyes")
         self.button2.connect("button-press-event",self.callbackYes)
-        #gtk.main()
+        #Gtk.main()
 
     def callbackYes(self,widget=None,event=None):
         self.window.hide()
         try:
-            gtk.main_quit()
+            Gtk.main_quit()
         except:
             pass
 
@@ -52,6 +52,6 @@ class DialogBox(object):
         self.window.set_title(title)
         self.label.set_markup(message)
         self.window.present()
-        gtk.main()
+        Gtk.main()
         return
 
