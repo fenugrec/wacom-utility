@@ -276,7 +276,8 @@ class Main(object):
             # Removing its Gdk.window reference
 
         # Get a second copy of the tree structure
-        wTree = Gtk.glade.XML("wacom_utility.glade")
+        wTree = Gtk.Builder()
+        wTree.add_from_file("wacom_utility.ui")
         if self.SelectedItem == "Welcome Screen":
             # Place container for this screen
             widget = wTree.get_object("WelcomeScreen")
