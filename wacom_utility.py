@@ -166,9 +166,9 @@ class Main(object):
         # Set up radio buttons
         widget0 = self.wTree.get_object("rb1")
         widget1 = self.wTree.get_object("rb2")
-        widget1.set_group(widget0)
+        widget1.join_group(widget0)
         widget2 = self.wTree.get_object("rb3")
-        widget2.set_group(widget0)
+        widget2.join_group(widget0)
 
         # Set up selection of mouse actions
         widget = self.wTree.get_object("MouseConfig")
