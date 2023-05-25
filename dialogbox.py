@@ -11,11 +11,11 @@ class DialogBox(object):
         # Load pointer for dialog box
         self.window = self.wTree.get_object("dialogbox")
         self.window.set_title("Wacom Control Panel")
-        self.set_transient_for(parent)
+        self.window.set_transient_for(parent)
         self.window.set_destroy_with_parent(True)
 
 
-        self.set_skip_taskbar_hint(1)
+        self.window.set_skip_taskbar_hint(1)
         self.window.set_skip_pager_hint(1)
 
         #self.window.present()
