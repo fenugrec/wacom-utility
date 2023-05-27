@@ -5,10 +5,11 @@ from builtins import range
 from copy import copy
 import os
 
+xorgconf_path = "/tmp/xorg_test.conf"
 
 def SetXorgConfig(value):
     CheckXorgConf()
-    f1 = open("/etc/X11/xorg.conf", 'r')
+    f1 = open(xorgconf_path, 'r')
     data = f1.readlines()
     f1.close()
 
@@ -75,9 +76,9 @@ def SetXorgConfig(value):
     f1.writelines(newdata)
     f1.close()
     # Backup
-    os.system("cp /etc/X11/xorg.conf ~/.xorg_wacom_utility_backup")
+    os.system("cp" + xorgconf_path + "~/.xorg_wacom_utility_backup")
     # Copy
-    os.system("gksu cp /tmp/xorg.conf /etc/X11/xorg.conf")
+#    os.system("gksu cp /tmp/xorg.conf /etc/X11/xorg.conf")
 
 
 def CheckXorgConfig():
@@ -86,7 +87,7 @@ def CheckXorgConfig():
     State = 0  # 0=Unconfigured 1=Configured 2=Broken
     Devices = []
     CheckXorgConf()
-    f1 = open("/etc/X11/xorg.conf", 'r')
+    f1 = open(xorgconf_path, 'r')
     data = f1.readlines()
     f1.close()
     for i in range(0,len(data)):
@@ -125,14 +126,14 @@ def CheckXorgConf():
     # If xorg.conf doesn't exist, create blank template
     # Distros such as Fedora 10 do not come with xorg.conf created
     try:
-        os.stat("/etc/X11/xorg.conf")
+        os.stat(xorgconf_path)
     except:
         newdata = ["Section \"ServerLayout\"\n", "EndSection"]
         f1 = open("/tmp/xorg.conf", 'w')
         f1.writelines(newdata)
         f1.close()
         # Copy
-        os.system("gksu cp /tmp/xorg.conf /etc/X11/xorg.conf")
+#        os.system("gksu cp /tmp/xorg.conf /etc/X11/xorg.conf")
 
 
 def GetSLData():
