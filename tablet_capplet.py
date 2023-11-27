@@ -118,7 +118,7 @@ class PressureCurveWidget(Gtk.DrawingArea):
             return v
 
     def ConfigureEvent(self, widget, event):
-        self.WindowSize = self.window.get_size()
+        self.WindowSize = self.get_window().get_width(),self.get_window().get_height()
         self.Scale = ((self.WindowSize[0] - self.ControlPointDiameter)/ 100.0, (self.WindowSize[1] - self.ControlPointDiameter) / 100.0)
 
     def MotionEvent(self, widget, event):
@@ -182,7 +182,7 @@ class PressureCurveWidget(Gtk.DrawingArea):
         self.DraggingCP1 = self.DraggingCP2 = self.DraggingCF = False
 
     def ExposeEvent(self, widget, event):
-        cr = widget.window.cairo_create()
+        cr = widget.get_window().cairo_create()
         cr.set_line_cap(cairo.LINE_CAP_ROUND);
 
         cr.save()
@@ -300,15 +300,15 @@ class DrawingTestWidget(Gtk.DrawingArea):
         self.set_events(Gdk.EventMask.POINTER_MOTION_MASK  | Gdk.EventMask.BUTTON_MOTION_MASK | Gdk.EventMask.BUTTON1_MOTION_MASK | Gdk.EventMask.BUTTON2_MOTION_MASK | Gdk.EventMask.BUTTON3_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK)
 
         self.connect("configure-event", self.ConfigureEvent)
-        self.connect("expose-event", self.ExposeEvent)
+        self.connect("draw", self.ExposeEvent)
         self.connect("motion-notify-event", self.MotionEvent)
         self.connect("button-press-event", self.ButtonPress)
         self.connect("button-release-event", self.ButtonRelease)
         self.set_size_request(100,100)
 
     def ConfigureEvent(self, widget, event):
-        self.WindowSize = self.window.get_size()
-        self.Raster = self.window.cairo_create().get_target().create_similar(cairo.CONTENT_COLOR, self.WindowSize[0], self.WindowSize[1])
+        self.WindowSize = self.get_window().get_width(),self.get_window().get_height()
+        self.Raster = self.get_window().cairo_create().get_target().create_similar(cairo.CONTENT_COLOR, self.WindowSize[0], self.WindowSize[1])
         self.RasterCr = cairo.Context(self.Raster)
         self.RasterCr.set_source_rgba(1.0, 1.0, 1.0, 1.0)
         self.RasterCr.rectangle(0.0, 0.0, self.WindowSize[0], self.WindowSize[1])
@@ -343,7 +343,7 @@ class DrawingTestWidget(Gtk.DrawingArea):
         self.Drawing = False
 
     def ExposeEvent(self, widget, event):
-        cr = widget.window.cairo_create()
+        cr = widget.get_window().cairo_create()
         cr.set_source_surface(self.Raster, 0.0, 0.0)
         cr.paint()
         cr.set_line_width(2)
