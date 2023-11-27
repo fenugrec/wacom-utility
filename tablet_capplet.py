@@ -85,7 +85,7 @@ class PressureCurveWidget(Gtk.DrawingArea):
         self.set_events(Gdk.EventMask.POINTER_MOTION_MASK  | Gdk.EventMask.BUTTON_MOTION_MASK | Gdk.EventMask.BUTTON1_MOTION_MASK | Gdk.EventMask.BUTTON2_MOTION_MASK | Gdk.EventMask.BUTTON3_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK)
 
         self.connect("configure-event", self.ConfigureEvent)
-        self.connect("expose-event", self.ExposeEvent)
+        self.connect("draw", self.ExposeEvent)
         self.connect("motion-notify-event", self.MotionEvent)
         self.connect("button-press-event", self.ButtonPress)
         self.connect("button-release-event", self.ButtonRelease)
