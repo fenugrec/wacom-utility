@@ -357,11 +357,11 @@ class GraphicsTabletApplet(object):
         self.InLoop = 0  # Flag
         self.WidgetTree = wTree
         self.MainWindow = window
-        self.DrawingTestFrame = self.WidgetTree.get_widget("drawingalignment")
-        self.PressureVBox = self.WidgetTree.get_widget("pressurevbox")
-        self.DeviceModeCombo = self.WidgetTree.get_widget("devicemodecombo")
-        self.XTilt = self.WidgetTree.get_widget("xtilt")
-        self.YTilt = self.WidgetTree.get_widget("ytilt")
+        self.DrawingTestFrame = self.WidgetTree.get_object("drawingalignment")
+        self.PressureVBox = self.WidgetTree.get_object("pressurevbox")
+        self.DeviceModeCombo = self.WidgetTree.get_object("devicemodecombo")
+        self.XTilt = self.WidgetTree.get_object("xtilt")
+        self.YTilt = self.WidgetTree.get_object("ytilt")
 
         self.Curve = PressureCurveWidget()
         self.Curve.show()
