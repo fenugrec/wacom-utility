@@ -372,14 +372,16 @@ class GraphicsTabletApplet(object):
         self.DrawingArea.show()
         self.DrawingTestFrame.add(self.DrawingArea)
 
-        devices = Gdk.devices_list()
-
-        for i in range(0,len(devices)):
-            item = devices[i].name
+        display = Gdk.Display.get_default()
+        seat = display.get_default_seat()
+        # match device name by iterating through list of X11DeviceXI2
+        for i in seat.get_pointer().list_slave_devices():
+            item = i.get_name()
             if item in Device:
                 self.Device = i
+                self.DeviceName = item
+
         self.DeviceMode = None
-        self.DeviceName = Device
 
         self.DrawingArea.Device = self.Device
         self.DeviceName = Gdk.devices_list()[self.Device].name
