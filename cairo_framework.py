@@ -5,22 +5,29 @@ from __future__ import print_function
 from builtins import str
 from past.utils import old_div
 from gi.repository import Gtk
+from gi.repository import GObject
 import cairo
 import os
 
 
-class DrawingArea(Gtk.DrawingArea):
-    __gsignals__ = {"draw": "override"}
+#class DrawingArea(Gtk.DrawingArea):
+#########    __gsignals__ = {"draw": "override"}
+#    def __init__(self):
+#        GObject.GObject.__init__(self)
+#        self.connect("draw", self.do_draw)
+#
+#    def do_draw(self, widget, cr):
+#        drawing_area = widget.get_allocation()
+#        #cr = self.get_window().cairo_create()
+#        #cr.rectangle(cr.area.x, cr.area.y, cr.area.width, cr.area.height)
+#        cr.rectangle(0, 0, drawing_area.width, drawing_area.height)
+#        cr.clip()
+#
+#        winsize = self.get_window().get_width(), self.get_window().get_width()
+#        self.draw(cr, winsize)
 
-    def do_draw(self, event):
-        cr = self.window.cairo_create()
-        cr.rectangle(event.area.x, event.area.y, event.area.width, event.area.height)
-        cr.clip()
 
-        self.draw(cr, *self.window.get_size())
-
-
-class Pad(DrawingArea):
+class Pad(Gtk.DrawingArea):
     def set_parameters(self, tablet=None):
         self.tablet = tablet
         if self.tablet:

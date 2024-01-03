@@ -314,15 +314,10 @@ class DrawingTestWidget(Gtk.DrawingArea):
         self.RasterCr.rectangle(0.0, 0.0, self.WindowSize[0], self.WindowSize[1])
         self.RasterCr.fill()
 
-    def GetPressure(self):
-        dev = Gdk.devices_list()[self.Device]
-        state = dev.get_state(self.window)
-        return dev.get_axis(state[0], Gdk.AXIS_PRESSURE)
-
     def MotionEvent(self, widget, event):
         if self.Drawing:
             pos = event.get_coords()
-            p = self.GetPressure()
+            p = event.get_axis(Gdk.AxisUse.PRESSURE)
             if not p:
                 p = 0.0
             r = p * 50 + 5
@@ -384,18 +379,18 @@ class GraphicsTabletApplet(object):
         self.DeviceMode = None
 
         self.DrawingArea.Device = self.Device
-        self.DeviceName = Gdk.devices_list()[self.Device].name
         self.Curve.SetDevice(self.DeviceName)
         self.UpdateDeviceMode()
 
         self.DeviceModeCombo.connect("changed", self.ModeChanged)
 
-        self.DrawingArea.set_extension_events(Gdk.EXTENSION_EVENTS_ALL)
+#not sure how to migrate this. Thanks, gtk docs
+#        self.DrawingArea.set_extension_events(Gdk.EXTENSION_EVENTS_ALL)
 
     def Run(self):
         self.Active = 1
         self.InLoop = 1
-        self.DeviceName = Gdk.devices_list()[self.Device].name
+        self.DeviceName = self.Device.get_name()
         self.UpdateDeviceMode()
         GObject.timeout_add(20, self.Update)
 
@@ -436,7 +431,7 @@ class GraphicsTabletApplet(object):
     def DeviceSelected(self, widget):
         self.Device = widget.get_active()
         self.DrawingArea.Device = self.Device
-        self.DeviceName = Gdk.devices_list()[self.Device].name
+        self.DeviceName = self.Device.get_name()
         self.Curve.SetDevice(self.DeviceName)
         self.UpdateDeviceMode()
 
