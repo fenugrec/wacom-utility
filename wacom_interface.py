@@ -1,7 +1,6 @@
-from __future__ import print_function
 # xsetwacom interface
-from future import standard_library
-standard_library.install_aliases()
+#from future import standard_library
+#standard_library.install_aliases()
 from builtins import str
 from builtins import object
 import os
@@ -79,7 +78,7 @@ class XSetWacom(object):
             function = "\"CORE KEY " + name + "\""
         elif type == 3:
             function = "\'TPCButton " + name + "\'"
-        print ("xsetwacom set '" + device + "' " + object + " " + function)
+        print("xsetwacom set '" + device + "' " + object + " " + function)
         result = os.popen("xsetwacom set '" + device + "' " + object + " " + function).read()
 
     def verifyString(self,string):

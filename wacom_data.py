@@ -1,4 +1,3 @@
-from __future__ import print_function
 # Loads settings on various models of tablets
 from builtins import object
 import xml.dom.minidom
