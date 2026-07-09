@@ -87,6 +87,7 @@ class PressureCurveWidget(Gtk.DrawingArea):
         self.connect("button-press-event", self.ButtonPress)
         self.connect("button-release-event", self.ButtonRelease)
         self.set_size_request(100,100)
+        self.window = self.get_window()
 
     def SetDevice(self, name):
         self.DeviceName = name
@@ -293,6 +294,8 @@ class DrawingTestWidget(Gtk.DrawingArea):
         self.WindowSize = None
         self.Raster = None
         self.RasterCr = None
+        self.window = self.get_window()
+        self.last_pressure = 0
 
         self.set_events(Gdk.EventMask.POINTER_MOTION_MASK  | Gdk.EventMask.BUTTON_MOTION_MASK | Gdk.EventMask.BUTTON1_MOTION_MASK | Gdk.EventMask.BUTTON2_MOTION_MASK | Gdk.EventMask.BUTTON3_MOTION_MASK | Gdk.EventMask.BUTTON_PRESS_MASK | Gdk.EventMask.BUTTON_RELEASE_MASK)
 
@@ -315,6 +318,7 @@ class DrawingTestWidget(Gtk.DrawingArea):
         if self.Drawing:
             pos = event.get_coords()
             p = event.get_axis(Gdk.AxisUse.PRESSURE)
+            self.last_pressure = p
             if not p:
                 p = 0.0
             r = p * 50 + 5
@@ -324,9 +328,10 @@ class DrawingTestWidget(Gtk.DrawingArea):
             self.RasterCr.fill_preserve()
             self.RasterCr.set_source_rgba(0.5, 0.2, p, 0.5)
             self.RasterCr.stroke()
-            reg = Gdk.Region()
-            reg.union_with_rect((int(pos[0] - r - 2), int(pos[1] - r - 2), int(2 * (r + 2)), int(2 * (r + 2))))
-            self.window.invalidate_region(reg, False)
+
+            rect = Gdk.Rectangle(int(pos[0] - r - 2), int(pos[1] - r - 2),
+                                      int(2 * (r + 2)), int(2 * (r + 2)))
+            widget.get_window().invalidate_rect(rect, False)
 
     def ButtonPress(self, widget, event):
         self.Drawing = True
@@ -335,7 +340,7 @@ class DrawingTestWidget(Gtk.DrawingArea):
         self.Drawing = False
 
     def ExposeEvent(self, widget, event):
-        cr = widget.get_window().cairo_create()
+        cr = widget.get_window().cairo_create() # really, create for every event ?? XXX
         cr.set_source_surface(self.Raster, 0.0, 0.0)
         cr.paint()
         cr.set_line_width(2)
@@ -395,6 +400,9 @@ class GraphicsTabletApplet(object):
         self.Active = 0
 
     def GetPressure(self):
+        p = self.DrawingArea.last_pressure
+        return p
+    # XXX not sure how to read axis data on-demand in gtk3/4... only possible from an event ?
         dev = self.Device
         if not isinstance(self.DrawingArea.window, Gdk.Window):
             return 0.0, 0.0
@@ -402,8 +410,9 @@ class GraphicsTabletApplet(object):
         return dev.get_axis(state[0], Gdk.AXIS_PRESSURE)
 
     def GetTilt(self):
-        dev = Gdk.devices_list()[self.Device]
-        state = dev.get_state(self.MainWindow.window)
+        return 0,0
+        dev = self.Device
+        state = dev.get_state(self.window)
         try:
             x = float(dev.get_axis(state[0], Gdk.AXIS_XTILT))
             y = float(dev.get_axis(state[0], Gdk.AXIS_YTILT))
