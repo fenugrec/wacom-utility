@@ -259,7 +259,9 @@ class Main(object):
 
     def SelectDevice(self,widget):
         Dataset = widget.get_model()
+        if Dataset is None: return
         Index = widget.get_cursor()
+        if Index[0] is None: return # nothing selected
         activerow = Index[0][0]
         self.SelectedItem = Dataset[activerow][0]
         self.ChangeScreen()
