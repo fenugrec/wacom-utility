@@ -395,7 +395,7 @@ class GraphicsTabletApplet(object):
         self.Active = 0
 
     def GetPressure(self):
-        dev = Gdk.devices_list()[self.Device]
+        dev = self.Device
         if not isinstance(self.DrawingArea.window, Gdk.Window):
             return 0.0, 0.0
         state = dev.get_state(self.DrawingArea.window)
