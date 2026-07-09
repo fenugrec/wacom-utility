@@ -5,7 +5,8 @@ from builtins import range
 from copy import copy
 import os
 
-xorgconf_path = "/tmp/xorg_test.conf"
+xorgconf_path = "/etc/X11/xorg.conf"
+tmp_xorgconf = "/tmp/xorg.conf"
 
 def SetXorgConfig(value):
     CheckXorgConf()
@@ -72,7 +73,7 @@ def SetXorgConfig(value):
             newdata.append("EndSection\n")
 
     # Write the new file to a temporary directory
-    f1 = open("/tmp/xorg.conf", 'w')
+    f1 = open(tmp_xorgconf, 'w')
     f1.writelines(newdata)
     f1.close()
     # Backup
@@ -87,7 +88,11 @@ def CheckXorgConfig():
     State = 0  # 0=Unconfigured 1=Configured 2=Broken
     Devices = []
     CheckXorgConf()
-    f1 = open(xorgconf_path, 'r')
+    try:
+        f1 = open(xorgconf_path, 'r')
+    except FileNotFoundError:
+        print("No previous config " + xorgconf_path)
+        return State, Devices
     data = f1.readlines()
     f1.close()
     for i in range(0,len(data)):
@@ -129,7 +134,7 @@ def CheckXorgConf():
         os.stat(xorgconf_path)
     except:
         newdata = ["Section \"ServerLayout\"\n", "EndSection"]
-        f1 = open("/tmp/xorg.conf", 'w')
+        f1 = open(tmp_xorgconf, 'w')
         f1.writelines(newdata)
         f1.close()
         # Copy
